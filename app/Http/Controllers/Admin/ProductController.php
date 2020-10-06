@@ -2,85 +2,79 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Product;
+use App\Http\Controllers\Controller;
+use App\Forms\Validation\Product as PV;
+use App\Traits\Sidebar\Catalog as CatalogRoutes;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use CatalogRoutes;
+
+
     public function index()
     {
-        //
+        $products = DB::table('products')->paginate(20);
+
+        return view('admin.product.index', ['sidebar' => $this->getSidebar(), 'products' => $products]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        return view('admin.product.create', ['sidebar' => $this->getSidebar()]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(Request $request, PV $validator)
     {
-        //
+        $data = $validator->extendFieldRule('slug', '|unique:products')
+            ->addMessage('slug.unique', 'Url turi buti unikalus')
+            ->validateForm($request->toArray());
+
+        $id = DB::table('products')->insertGetId($data);
+
+        return redirect()->route('admin.product.show', ['product' => $id]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
     public function show(Product $product)
     {
-        //
+        return view('admin.product.show', ['sidebar' => $this->getSidebar(), 'product' => $product]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Product $product)
     {
-        //
+        return view('admin.product.edit', ['sidebar' => $this->getSidebar(), 'product' => $product]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $product, PV $validator)
     {
-        //
+        $data = $validator->validateForm($request->toArray());
+
+        DB::table('products')->update($data);
+
+        return redirect()->route('admin.product.show', $product->id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Product $product)
+    public function delete(Product $product)
     {
-        //
+        return view('admin.product.delete', ['sidebar' => $this->getSidebar(), 'product' => $product]);
+    }
+
+    public function destroy(Request $request, Product $product)
+    {
+        $data = $request->validate(['name' => 'string']);
+
+        if ($product->name === $data['name']) {
+            $product->delete();
+            return redirect()->route('admin.product.index');
+        } else {
+            return redirect()->back()->withErrors(['name' => 'Blogai ivestas produkto pavadinimas']);
+        }
+    }
+
+    public function modifications(Product $product)
+    {
+        return view('admin.product.modifications', ['sidebar' => $this->getSidebar(), 'product' => $product]);
     }
 }

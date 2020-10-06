@@ -26,9 +26,17 @@
 .admin-sidebar {
     position: fixed;
     height: calc(100vh - 60px);
-    width: 60px;
     bottom: 0;
-    left: 0;
+    top: 60px;
+    z-index: 100;
+}
+
+.admin-sidebar-closed {
+    width: 60px;
+}
+
+.admin-sidebar-opened {
+    width: 300px;
 }
 
 .admin-content-container {
@@ -40,6 +48,46 @@
     left: 60px;
 }
 
-.sq-icon-medium {
+.small-icon {
+    height: 32px;
+    width: 32px;
+    object-fit: cover;
+}
 
+.row-40percent {
+    @media (min-width: 1200px) {
+        width: calc(100% * 0.4) !important;
+    }
+    @media (max-width: 1199px) {
+        width: 100% !important;
+    }
+}
+
+.row-60percent {
+    @media (min-width: 1200px) {
+        width: calc(100% * 0.6) !important;
+    }
+    @media (max-width: 1199px) {
+        width: 100% !important;
+    }
+}
+
+.testas {
+    height: 100px;
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.font-size-1rem {
+    font-size: 1rem;
+}
+
+.font-size-1-8rem {
+    font-size: 1.8rem;
+}
+
+.header-logo {
+    height: 60px;
+    object-fit: scale-down;
 }

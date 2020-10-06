@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Modification;
 use Illuminate\Database\Seeder;
 
 class ModificationSeeder extends Seeder
@@ -13,6 +14,6 @@ class ModificationSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Modification::factory()->times(10)->create();
     }
 }

@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class UnitValue extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+    public function modifications()
+    {
+        return $this->hasMany(Modification::class);
+    }
 }

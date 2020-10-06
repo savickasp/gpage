@@ -21,8 +21,11 @@ class ManufacturerFactory extends Factory
      */
     public function definition()
     {
+        $word = $this->faker->word;
+
         return [
-            //
+            'name' => $word,
+            'slug' => $word . time(),
         ];
     }
 }

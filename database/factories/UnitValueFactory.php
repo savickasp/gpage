@@ -22,7 +22,14 @@ class UnitValueFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => $this->getUnitValue(),
         ];
+    }
+
+    private function getUnitValue()
+    {
+        $unit = ['vnt', 'g', 'kg', 'mg', 'l', 'ml'];
+
+        return rand(0, 1000) . $unit[rand(0,5)];
     }
 }

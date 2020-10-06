@@ -10917,9 +10917,17 @@ a.text-dark:focus {
 .admin-sidebar {
   position: fixed;
   height: calc(100vh - 60px);
-  width: 60px;
   bottom: 0;
-  left: 0;
+  top: 60px;
+  z-index: 100;
+}
+
+.admin-sidebar-closed {
+  width: 60px;
+}
+
+.admin-sidebar-opened {
+  width: 300px;
 }
 
 .admin-content-container {
@@ -10929,5 +10937,57 @@ a.text-dark:focus {
   width: calc(100vw - 60px);
   top: 60px;
   left: 60px;
+}
+
+.small-icon {
+  height: 32px;
+  width: 32px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+@media (min-width: 1200px) {
+  .row-40percent {
+    width: calc(100% * 0.4) !important;
+  }
+}
+
+@media (max-width: 1199px) {
+  .row-40percent {
+    width: 100% !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .row-60percent {
+    width: calc(100% * 0.6) !important;
+  }
+}
+
+@media (max-width: 1199px) {
+  .row-60percent {
+    width: 100% !important;
+  }
+}
+
+.testas {
+  height: 100px;
+  position: relative;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.font-size-1rem {
+  font-size: 1rem;
+}
+
+.font-size-1-8rem {
+  font-size: 1.8rem;
+}
+
+.header-logo {
+  height: 60px;
+  -o-object-fit: scale-down;
+     object-fit: scale-down;
 }
 

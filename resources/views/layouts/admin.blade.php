@@ -12,6 +12,7 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/fontawesome/all.min.js') }}" defer></script>
+    @yield('script')
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -23,19 +24,19 @@
 </head>
 <body>
 <div id="app" class="app-admin">
-    <nav class="navbar navbar-dark bg-dark admin-nav">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('admin.dashboard.index') }}">Dashboard</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="{{ __('Toggle navigation') }}">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm admin-nav">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('admin.dashboard.index') }}">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
-                    <a href="{{ route('admin.dashboard.catalog') }}" class="nav-link nav-item">katalogas</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.dashboard.catalog') }}">Katalogas</a>
+                    </li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -52,8 +53,7 @@
                         @endif
                     @else
                         <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }}
                             </a>
 
@@ -74,7 +74,7 @@
             </div>
         </div>
     </nav>
-    <admin-sidebar></admin-sidebar>
+   <admin-sidebar :routes='@json($sidebar['routes'] ?? [])'></admin-sidebar>
     <div class="admin-content-container">
         <div class="container pt-5 pb-5">
             @yield('content')

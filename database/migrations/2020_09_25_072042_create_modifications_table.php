@@ -15,6 +15,10 @@ class CreateModificationsTable extends Migration
     {
         Schema::create('modifications', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->integer('price')->nullable();
+            $table->foreignId('product_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('unit_value_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

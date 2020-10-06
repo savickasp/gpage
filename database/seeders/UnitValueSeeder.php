@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\UnitValue;
 use Illuminate\Database\Seeder;
 
 class UnitValueSeeder extends Seeder
@@ -13,6 +14,6 @@ class UnitValueSeeder extends Seeder
      */
     public function run()
     {
-        //
+        UnitValue::factory()->times(10)->create();
     }
 }

@@ -15,6 +15,10 @@ class CreateProductLinesTable extends Migration
     {
         Schema::create('product_lines', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('slug', 100);
+            $table->longText('description')->nullable();
+            $table->foreignId('manufacturer_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

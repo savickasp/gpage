@@ -2,85 +2,77 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\UnitValue;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\UnitValue;
+use App\Http\Controllers\Controller;
+use App\Forms\Validation\UnitValue as UVV;
+use App\Traits\Sidebar\Catalog as CatalogRoutes;
 
 class UnitValueController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use CatalogRoutes;
+
+
     public function index()
     {
-        //
+        $unitvalues = DB::table('unit_values')->paginate(20);
+
+        return view('admin.unitvalue.index', ['sidebar' => $this->getSidebar(), 'unitvalues' => $unitvalues]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        return view('admin.unitvalue.create', ['sidebar' => $this->getSidebar()]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(Request $request, UVV $validator)
     {
-        //
+        $data = $validator->extendFieldRule('name', '|unique:unit_values')
+            ->addMessage('name.unique', 'Toks mato vienetas jau egzistuoja')
+            ->validateForm($request->toArray());
+
+        $id = DB::table('unit_values')->insertGetId($data);
+
+        return redirect()->route('admin.unitvalue.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\UnitValue  $unitValue
-     * @return \Illuminate\Http\Response
-     */
-    public function show(UnitValue $unitValue)
+    public function edit(UnitValue $unitvalue)
     {
-        //
+        return view('admin.unitvalue.edit', ['sidebar' => $this->getSidebar(), 'unitvalue' => $unitvalue]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\UnitValue  $unitValue
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(UnitValue $unitValue)
+    public function update(Request $request, UnitValue $unitvalue, UVV $validator)
     {
-        //
+        $data = $validator->validateForm($request->toArray());
+
+        if (count(DB::table('unit_values')->where('name', '=', $data['name'])->get()->all())) {
+            return redirect()->back()->withErrors(['name' => 'Toks mato vienetas jau egzistuoja']);
+        } else {
+            $unitvalue->name = $data['name'];
+            $unitvalue->save();
+            return redirect()->route('admin.unitvalue.index', $unitvalue->id);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UnitValue  $unitValue
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, UnitValue $unitValue)
+    public function delete(UnitValue $unitvalue)
     {
-        //
+        return view('admin.unitvalue.delete', ['sidebar' => $this->getSidebar(), 'unitvalue' => $unitvalue]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\UnitValue  $unitValue
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(UnitValue $unitValue)
+    public function destroy(Request $request, UnitValue $unitvalue, UVV $validator)
     {
-        //
+        $data = $validator->validateForm($request->toArray());
+        if ($unitvalue->name === $data['name']) {
+            $unitvalue->delete();
+            return redirect()->route('admin.unitvalue.index');
+        } else {
+            return redirect()->back()->withErrors(['name' => 'Blogai ivestas mato vieneto pavadinimas pavadinimas']);
+        }
+    }
+
+    public function getAllUnitValues()
+    {
+        return UnitValue::get()->all();
     }
 }
